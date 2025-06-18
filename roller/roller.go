@@ -1,7 +1,7 @@
 package roller
 
 import (
-	//    "fmt"
+
 	//    "math/rand"
 	//    "strconv"
 	//    "image"
@@ -29,12 +29,21 @@ import (
 
 func Roller(NumDice, typeDice, addRoll, ed, his *widget.Editor) {
 	NumStr := NumDice.Text()
+	if NumStr == "" {
+		NumStr = "1"
+	}
 	Num, _ := strconv.Atoi(NumStr)
 
 	DiceStr := typeDice.Text()
+	if DiceStr == "" {
+		DiceStr = "20"
+	}
 	Dice, _ := strconv.Atoi(DiceStr)
 
 	BonusStr := addRoll.Text()
+	if BonusStr == "" {
+		BonusStr = "0"
+	}
 	Bonus, _ := strconv.Atoi(BonusStr)
 
 	roll_string := "---< Rolled " + NumStr + "d" + DiceStr + " + " + BonusStr + " >---\n"
