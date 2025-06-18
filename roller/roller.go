@@ -27,7 +27,7 @@ import (
 	// "gioui.org/io/system"
 )
 
-func Roller(NumDice, typeDice, addRoll, ed *widget.Editor) {
+func Roller(NumDice, typeDice, addRoll, ed, his *widget.Editor) {
 	NumStr := NumDice.Text()
 	Num, _ := strconv.Atoi(NumStr)
 
@@ -37,12 +37,12 @@ func Roller(NumDice, typeDice, addRoll, ed *widget.Editor) {
 	BonusStr := addRoll.Text()
 	Bonus, _ := strconv.Atoi(BonusStr)
 
-	ed.SetCaret(ed.Len(), ed.Len())
 	roll_string := "---< Rolled " + NumStr + "d" + DiceStr + " + " + BonusStr + " >---\n"
-	ed.Insert(roll_string)
+	ed.SetText(roll_string)
+	his.Insert(roll_string)
 
 	var DiceTotalInt int
-
+	ed.SetCaret(ed.Len(), ed.Len())
 	for Count := 1; Count <= Num; Count++ {
 		CountStr := strconv.Itoa(Count)
 
@@ -54,14 +54,16 @@ func Roller(NumDice, typeDice, addRoll, ed *widget.Editor) {
 		ed.SetCaret(ed.Len(), ed.Len())
 		insert_string := "Die " + CountStr + ": " + ResultsStr + "\n"
 		ed.Insert(insert_string)
-		ed.SetCaret(ed.Len(), ed.Len())
-		// fmt.Printf("Die %v: %v\n", Count, ResultsStr)
+		his.Insert(insert_string)
 	}
 
 	DiceTotalStr := strconv.Itoa(DiceTotalInt)
 	RollTotalStr := strconv.Itoa(DiceTotalInt + Bonus)
 
-	ed.SetCaret(ed.Len(), ed.Len())
-	totlal_string := "---< Dice " + DiceTotalStr + " + Bonus/Penalty" + BonusStr + " = Total " + RollTotalStr + " >---\n"
+	totlal_string := "---< Total of the Dice " + DiceTotalStr + " + Bonus/Penalty " + BonusStr + " = Grand Total " + RollTotalStr + " >---\n"
 	ed.Insert(totlal_string)
+	his.Insert(totlal_string)
+
+	ed.SetCaret(ed.Len(), ed.Len())
+	his.SetCaret(his.Len(), his.Len())
 }

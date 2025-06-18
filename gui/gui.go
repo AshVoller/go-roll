@@ -30,7 +30,7 @@ type D = layout.Dimensions
 
 var text_margins = layout.Inset{
 	Top:    unit.Dp(40),
-	Bottom: unit.Dp(40),
+	Bottom: unit.Dp(20),
 	Right:  unit.Dp(170),
 	Left:   unit.Dp(170),
 }
@@ -42,7 +42,7 @@ var text_border = widget.Border{
 }
 
 var output_margins = layout.Inset{
-	Top:    unit.Dp(40),
+	Top:    unit.Dp(0),
 	Bottom: unit.Dp(40),
 	Right:  unit.Dp(170),
 	Left:   unit.Dp(170),
@@ -55,7 +55,7 @@ var output_border = widget.Border{
 }
 
 var roll_margins = layout.Inset{
-	Top:    unit.Dp(25),
+	Top:    unit.Dp(0),
 	Bottom: unit.Dp(25),
 	Right:  unit.Dp(160),
 	Left:   unit.Dp(160),
@@ -66,7 +66,7 @@ var Output_editor = widget.Editor{
 	ReadOnly:   true,
 }
 
-var history_editor = widget.Editor{
+var History_editor = widget.Editor{
 	LineHeight: 10,
 	ReadOnly:   true,
 }
@@ -101,8 +101,6 @@ func Gui(w *app.Window) error {
 		Alignment:  text.Middle,
 	}
 
-	history_editor.SetText("History")
-
 	var ops op.Ops
 
 	th := material.NewTheme()
@@ -118,15 +116,23 @@ func Gui(w *app.Window) error {
 				func(gtx C) D {
 					// Flex Box of the whole page
 					return layout.Flex{
-						Axis: layout.Vertical,
-						//Alignment: layout.Start,
+						Axis:      layout.Vertical,
+						Alignment: layout.Middle,
 						//Spacing:   layout.SpaceStart, // come back to later
 					}.Layout(gtx,
-						layout.Rigid(layout.Spacer{Height: unit.Dp(25)}.Layout),
+						layout.Rigid(layout.Spacer{Height: unit.Dp(50)}.Layout),
+
+						layout.Rigid(func(gtx C) D {
+							gtx.Constraints.Min.X = gtx.Dp(100)
+							gtx.Constraints.Max.X = gtx.Dp(300)
+							return material.Body2(th, "Roll Output").Layout(gtx)
+						}),
 
 						layout.Rigid(func(gtx C) D {
 							return output_margins.Layout(gtx, func(gtx C) D {
 								return output_border.Layout(gtx, func(gtx C) D {
+									gtx.Constraints.Min.Y = gtx.Dp(250)
+									gtx.Constraints.Max.Y = gtx.Dp(250)
 									return material.Editor(th, &Output_editor, "Enter a number of dice,\nNumber of sides of dice,\nand +/- to the dice roll.").Layout(gtx)
 								})
 							})
@@ -137,8 +143,8 @@ func Gui(w *app.Window) error {
 							return layout.Center.Layout(gtx, func(gtx C) D {
 								return text_margins.Layout(gtx, func(gtx C) D {
 									return layout.Flex{
-										Axis:      layout.Horizontal,
-										Alignment: layout.Middle,
+										Axis: layout.Horizontal,
+										// Alignment: layout.Middle,
 									}.Layout(gtx,
 										layout.Rigid(func(gtx C) D {
 											gtx.Constraints.Min.X = gtx.Dp(100)
@@ -192,7 +198,7 @@ func Gui(w *app.Window) error {
 						layout.Rigid(func(gtx C) D {
 							return roll_margins.Layout(gtx, func(gtx C) D {
 								for rollButton.Clicked(gtx) {
-									roller.Roller(&numDiceInput, &typeDiceInput, &addRollInput, &Output_editor)
+									roller.Roller(&numDiceInput, &typeDiceInput, &addRollInput, &Output_editor, &History_editor)
 								}
 								btn := material.Button(th, &rollButton, "Roll")
 								return btn.Layout(gtx)
@@ -202,9 +208,17 @@ func Gui(w *app.Window) error {
 						layout.Rigid(layout.Spacer{Height: unit.Dp(25)}.Layout),
 
 						layout.Rigid(func(gtx C) D {
+							gtx.Constraints.Min.X = gtx.Dp(200)
+							gtx.Constraints.Max.X = gtx.Dp(200)
+							return material.Body2(th, "History Output").Layout(gtx)
+						}),
+
+						layout.Rigid(func(gtx C) D {
 							return output_margins.Layout(gtx, func(gtx C) D {
 								return output_border.Layout(gtx, func(gtx C) D {
-									return material.Editor(th, &history_editor, "").Layout(gtx)
+									gtx.Constraints.Min.Y = gtx.Dp(250)
+									gtx.Constraints.Max.Y = gtx.Dp(250)
+									return material.Editor(th, &History_editor, "Roll History").Layout(gtx)
 								})
 							})
 						}),
