@@ -1,0 +1,16 @@
+v1.0
+
+Window: diceroller
+
+elements:
+    Number of Dice: 1
+
+    Type of Dice: 1
+
+    Bonus/Plenty to roll: 0
+
+    output frame: empty (or maybe instructions)
+
+    history: frame: empty
+
+    Roll button: clickable
