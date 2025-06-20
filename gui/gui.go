@@ -1,28 +1,18 @@
 package gui
 
 import (
-	//    "fmt"
-	//    "math/rand"
-	//    "strconv"
-	//    "image"
-	"diceroller/roller"
+	"go-roll/roller"
 	"image/color"
-
-	//    "log"
-	//    "os"
 
 	"gioui.org/app"
 	"gioui.org/op"
 
-	//    "gioui.org/op/clip"
 	"gioui.org/text"
 	"gioui.org/unit"
 
-	//    "gioui.org/op/paint"
 	"gioui.org/layout"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
-	// "gioui.org/io/system"
 )
 
 type C = layout.Context
@@ -82,7 +72,6 @@ func Gui(w *app.Window) error {
 	// Roll Button
 	var rollButton widget.Clickable
 
-	// Maybe Turn into a struct ?
 	// Number of Dice
 	var numDiceInput = widget.Editor{
 		SingleLine: true,

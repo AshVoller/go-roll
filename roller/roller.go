@@ -1,30 +1,10 @@
 package roller
 
 import (
-
-	//    "math/rand"
-	//    "strconv"
-	//    "image"
-	//	"image/color"
-	//	"log"
-	//	"os"
-
-	//	"gioui.org/app"
-	//	"gioui.org/op"
-
-	//    "gioui.org/op/clip"
-	//	"gioui.org/text"
-	//	"gioui.org/unit"
-
-	//    "gioui.org/op/paint"
-	//	"gioui.org/layout"
-
 	"math/rand"
 	"strconv"
 
 	"gioui.org/widget"
-	//	"gioui.org/widget/material"
-	// "gioui.org/io/system"
 )
 
 func Roller(NumDice, typeDice, addRoll, ed, his *widget.Editor) {

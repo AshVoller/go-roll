@@ -1,27 +1,12 @@
 package main
 
 import (
-	//    "fmt"
-	//    "math/rand"
-	//    "strconv"
-	//    "image"
-	//	"image/color"
 	"log"
 	"os"
 
 	"gioui.org/app"
-	//	"gioui.org/op"
 
-	//    "gioui.org/op/clip"
-	//	"gioui.org/text"
-
-	//    "gioui.org/op/paint"
-	//	"gioui.org/layout"
-	//	"gioui.org/widget"
-	//	"gioui.org/widget/material"
-	// "gioui.org/io/system"
-
-	"diceroller/gui"
+	"go-roll/gui"
 )
 
 func main() {
