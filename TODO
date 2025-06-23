@@ -1,15 +1,34 @@
+v1.1
+
+ui:
+    drop down menu for num dice, num face dice, and +/- to dice
+
+    AppBar Menu
+
+dice systems:
+    roll and keep
+
+    fate dice
+
+    percentile dice
+
+    duality dice
+
+    storyteller system
+
 v1.0
 
-Window: diceroller
+Window: 
+    diceroller -> go-roll
 
 elements:
     Number of Dice: 1
 
-    Type of Dice: 1
+    Type of Dice: 20
 
     Bonus/Plenty to roll: 0
 
-    output frame: empty (or maybe instructions)
+    output frame: instructions hint
 
     history: frame: empty
 
