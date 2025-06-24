@@ -116,7 +116,6 @@ func Gui(w *app.Window) error {
 							gtx.Constraints.Max.X = gtx.Dp(300)
 							return material.Body2(th, "Roll Output").Layout(gtx)
 						}),
-
 						layout.Rigid(func(gtx C) D {
 							return output_margins.Layout(gtx, func(gtx C) D {
 								return output_border.Layout(gtx, func(gtx C) D {
@@ -140,7 +139,6 @@ func Gui(w *app.Window) error {
 											gtx.Constraints.Max.X = gtx.Dp(300)
 											return material.Body2(th, "Number of Dice").Layout(gtx)
 										}),
-
 										layout.Rigid(layout.Spacer{Width: 5}.Layout),
 										layout.Rigid(func(gtx C) D {
 											ed := material.Editor(th, &numDiceInput, "1")
@@ -150,12 +148,12 @@ func Gui(w *app.Window) error {
 										}),
 
 										layout.Rigid(layout.Spacer{Width: 20}.Layout),
+
 										layout.Rigid(func(gtx C) D {
 											gtx.Constraints.Min.X = gtx.Dp(100)
 											gtx.Constraints.Max.X = gtx.Dp(300)
 											return material.Body2(th, "Number Faces on Dice").Layout(gtx)
 										}),
-
 										layout.Rigid(layout.Spacer{Width: 5}.Layout),
 										layout.Rigid(func(gtx C) D {
 											ed := material.Editor(th, &typeDiceInput, "20")
@@ -165,12 +163,12 @@ func Gui(w *app.Window) error {
 										}),
 
 										layout.Rigid(layout.Spacer{Width: 20}.Layout),
+
 										layout.Rigid(func(gtx C) D {
 											gtx.Constraints.Min.X = gtx.Dp(100)
 											gtx.Constraints.Max.X = gtx.Dp(300)
 											return material.Body2(th, "+/- to dice roll").Layout(gtx)
 										}),
-
 										layout.Rigid(layout.Spacer{Width: 5}.Layout),
 										layout.Rigid(func(gtx C) D {
 											ed := material.Editor(th, &addRollInput, "0")
@@ -201,7 +199,6 @@ func Gui(w *app.Window) error {
 							gtx.Constraints.Max.X = gtx.Dp(200)
 							return material.Body2(th, "History Output").Layout(gtx)
 						}),
-
 						layout.Rigid(func(gtx C) D {
 							return output_margins.Layout(gtx, func(gtx C) D {
 								return output_border.Layout(gtx, func(gtx C) D {
