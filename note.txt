@@ -1,0 +1,39 @@
+roller.go:
+    lowercase internal variables in func Roller
+        NumDice
+        NumStr
+        Num
+        DiceStr
+        Dice
+        BonusStr
+        Bonus
+        DiceTotalInt
+        Count
+        CountStr
+        ResultsInt
+        ResultsStr
+        RollerTotalStr
+    check consistance of variable names
+        NumStr
+        DiceStr
+        BonusStr
+        roll_string
+        CountStr
+        ResultsInt
+        ResultsStr
+        DiceTotalInt
+        insert_string
+        DiceTotalStr
+        RollTotalStr
+        total_string
+    change variable name
+        NumDice
+        typeDice
+        addRoll
+        ed
+        his
+        roll_string
+        insert_string
+        total_string
+
+    investigation using an array for the dice instead of just rolling. example (0,0,0,0,0,0,1,1,1,2) for number of successes
