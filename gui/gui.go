@@ -2,9 +2,12 @@ package gui
 
 import (
 	"image/color"
+	"log"
+	"time"
 
 	"gioui.org/app"
 	"gioui.org/op"
+	"golang.org/x/exp/shiny/materialdesign/icons"
 
 	"gioui.org/text"
 	"gioui.org/unit"
@@ -14,7 +17,6 @@ import (
 	"gioui.org/widget/material"
 
 	"gioui.org/x/component"
-	"golang.org/x/exp/shiny/materialdesign/icons"
 )
 
 type C = layout.Context
@@ -109,6 +111,27 @@ func Gui(w *app.Window) error {
 
 	var ops op.Ops
 
+	appBar.NavigationIcon = MenuIcon
+	appBar.Title = "go-roll"
+	appBar.ContextualTitle = "Contextual Menu"
+	appBar.Anchor = component.Top
+
+	modalSideDraw.AddNavItem(
+		component.NavItem{
+			Tag:  "3",
+			Name: "Test 3",
+			Icon: MenuIcon,
+		},
+	)
+
+	modalSideDraw.AddNavItem(
+		component.NavItem{
+			Tag:  "4",
+			Name: "Test 4",
+			Icon: MenuIcon,
+		},
+	)
+
 	for {
 		switch e := w.Event().(type) {
 		case app.DestroyEvent:
@@ -116,39 +139,62 @@ func Gui(w *app.Window) error {
 		case app.FrameEvent:
 			gtx := app.NewContext(&ops, e)
 
-			layout.Flex{
-				Axis: layout.Vertical,
-			}.Layout(gtx,
-				layout.Rigid(func(gtx layout.Context) layout.Dimensions {
-					return appBar.Layout(gtx, th, "string one", "string two")
-				}),
-				layout.Flexed(1, func(gtx layout.Context) layout.Dimensions {
-					return layout.Center.Layout(gtx, func(gtx layout.Context) layout.Dimensions {
-						return material.Body1(th, "Hello, Gio!").Layout(gtx)
-					})
-				}),
-			)
+			appBarEvents(gtx)
 
-			materialList := material.List(th, &window_list)
-
-			materialList.Layout(gtx, len(storytellerList), func(gtx C, i int) D {
-				return storytellerList[i](gtx)
+			bar := layout.Rigid(func(gtx C) D {
+				return appBar.Layout(gtx, th, "string A", "string B")
 			})
+
+			menu := layout.Flexed(1, func(gtx C) D {
+				return content(gtx, th)
+			})
+
+			flex := layout.Flex{
+				Axis:      layout.Vertical,
+				Alignment: layout.Middle,
+			}
+			flex.Layout(gtx, bar, menu)
+
+			modal.Layout(gtx, th)
 
 			e.Frame(gtx.Ops)
 		}
 	}
 }
 
-var modal component.ModalLayer
-
-var appBar = component.AppBar{
-	Title:            "go-roll",
-	Anchor:           component.Top,
-	ModalLayer:       &modal,
-	NavigationIcon:   MenuIcon,
-	NavigationButton: widget.Clickable{},
+func appBarEvents(gtx layout.Context) {
+	for _, navi_event := range appBar.Events(gtx) {
+		switch n := navi_event.(type) {
+		case component.AppBarNavigationClicked:
+			modalSideDraw.Appear(gtx.Now)
+			sideAnim.Disappear(gtx.Now)
+			log.Printf("button pushed: %v", n)
+		case component.AppBarContextMenuDismissed:
+			log.Printf("Context Menu Dismissed: %v", n)
+		case component.AppBarOverflowActionClicked:
+			log.Printf("Overflow Action Clicked: %v", n)
+		}
+	}
 }
+
+func content(gtx C, th *material.Theme) D {
+	materialList := material.List(th, &window_list)
+
+	return materialList.Layout(gtx, len(storytellerList), func(gtx C, i int) D {
+		return storytellerList[i](gtx)
+	})
+}
+
+var sideAnim = component.VisibilityAnimation{
+	State:    component.Invisible,
+	Duration: time.Millisecond * 250,
+}
+
+var modal = component.NewModal()
+
+var modalSideDraw = component.NewModalNav(modal, "Option 2", "Subtitle 2")
+
+var appBar = component.NewAppBar(modal)
 
 var MenuIcon *widget.Icon = func() *widget.Icon {
 	icon, _ := widget.NewIcon(icons.NavigationMenu)
