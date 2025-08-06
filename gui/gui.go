@@ -3,7 +3,6 @@ package gui
 import (
 	"image/color"
 	"log"
-	"time"
 
 	"gioui.org/app"
 	"gioui.org/op"
@@ -107,6 +106,22 @@ var diffInput = widget.Editor{
 	Alignment:  text.Middle,
 }
 
+var modal = component.NewModal()
+
+// var sideAnim = component.VisibilityAnimation{
+// 	State:    component.Invisible,
+// 	Duration: time.Millisecond * 250,
+// }
+
+var modalSideDraw = component.NewModalNav(modal, "Dice Systems", "Choose which system to use.")
+
+var appBar = component.NewAppBar(modal)
+
+var MenuIcon *widget.Icon = func() *widget.Icon {
+	icon, _ := widget.NewIcon(icons.NavigationMenu)
+	return icon
+}()
+
 func Gui(w *app.Window) error {
 
 	var ops op.Ops
@@ -118,17 +133,17 @@ func Gui(w *app.Window) error {
 
 	modalSideDraw.AddNavItem(
 		component.NavItem{
-			Tag:  "3",
-			Name: "Test 3",
-			Icon: MenuIcon,
+			Tag:  0,
+			Name: "Basic Dice",
+			// Icon: MenuIcon,
 		},
 	)
 
 	modalSideDraw.AddNavItem(
 		component.NavItem{
-			Tag:  "4",
-			Name: "Test 4",
-			Icon: MenuIcon,
+			Tag:  1,
+			Name: "Exalted",
+			// Icon: MenuIcon,
 		},
 	)
 
@@ -141,12 +156,27 @@ func Gui(w *app.Window) error {
 
 			appBarEvents(gtx)
 
+			if modalSideDraw.NavDestinationChanged() {
+				currentNav := modalSideDraw.CurrentNavDestination()
+				tag, ok := currentNav.(int)
+				if !ok {
+					log.Printf("Current Nav is not a int: %v", ok)
+				}
+				log.Printf("tag is: %v", tag)
+
+				var id ListID = ListID(tag)
+
+				ContentList = GetList(id)
+				log.Printf("widget is: %v", ContentList)
+				log.Printf("Navi Draw selected: %v", currentNav)
+			}
+
 			bar := layout.Rigid(func(gtx C) D {
 				return appBar.Layout(gtx, th, "string A", "string B")
 			})
 
 			menu := layout.Flexed(1, func(gtx C) D {
-				return content(gtx, th)
+				return content(gtx, th, ContentList)
 			})
 
 			flex := layout.Flex{
@@ -167,7 +197,7 @@ func appBarEvents(gtx layout.Context) {
 		switch n := navi_event.(type) {
 		case component.AppBarNavigationClicked:
 			modalSideDraw.Appear(gtx.Now)
-			sideAnim.Disappear(gtx.Now)
+			// sideAnim.Disappear(gtx.Now)
 			log.Printf("button pushed: %v", n)
 		case component.AppBarContextMenuDismissed:
 			log.Printf("Context Menu Dismissed: %v", n)
@@ -177,26 +207,32 @@ func appBarEvents(gtx layout.Context) {
 	}
 }
 
-func content(gtx C, th *material.Theme) D {
+func content(gtx C, th *material.Theme, contentList []layout.Widget) D {
 	materialList := material.List(th, &window_list)
 
-	return materialList.Layout(gtx, len(storytellerList), func(gtx C, i int) D {
-		return storytellerList[i](gtx)
+	return materialList.Layout(gtx, len(contentList), func(gtx C, i int) D {
+		return contentList[i](gtx)
 	})
 }
 
-var sideAnim = component.VisibilityAnimation{
-	State:    component.Invisible,
-	Duration: time.Millisecond * 250,
+type ListID int
+
+const (
+	BasicList ListID = iota
+	StorytellerList
+)
+
+func GetList(id ListID) []layout.Widget {
+	switch id {
+	case BasicList:
+		log.Printf("the list is: %v", basicList)
+		return basicList
+	case StorytellerList:
+		log.Printf("the list is: %v", storytellerList)
+		return storytellerList
+	default:
+		return nil
+	}
 }
 
-var modal = component.NewModal()
-
-var modalSideDraw = component.NewModalNav(modal, "Option 2", "Subtitle 2")
-
-var appBar = component.NewAppBar(modal)
-
-var MenuIcon *widget.Icon = func() *widget.Icon {
-	icon, _ := widget.NewIcon(icons.NavigationMenu)
-	return icon
-}()
+var ContentList []layout.Widget = basicList
