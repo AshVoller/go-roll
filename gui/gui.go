@@ -23,6 +23,8 @@ type D = layout.Dimensions
 
 var th = material.NewTheme()
 
+// TODO add logger
+
 var text_margins = layout.Inset{
 	Top:    unit.Dp(40),
 	Bottom: unit.Dp(20),
@@ -106,31 +108,73 @@ var diffInput = widget.Editor{
 	Alignment:  text.Middle,
 }
 
+// App Bar and Nav Menu
 var modal = component.NewModal()
-
-// var sideAnim = component.VisibilityAnimation{
-// 	State:    component.Invisible,
-// 	Duration: time.Millisecond * 250,
-// }
-
+var appBar = component.NewAppBar(modal)
 var modalSideDraw = component.NewModalNav(modal, "Dice Systems", "Choose which system to use.")
 
-var appBar = component.NewAppBar(modal)
+// App Bar Event Handler
+func appBarEvents(gtx layout.Context) {
+	for _, navi_event := range appBar.Events(gtx) {
+		switch navi_event.(type) {
+		case component.AppBarNavigationClicked:
+			modalSideDraw.Appear(gtx.Now)
+			// log.Printf("button pushed: %v", n)
+		case component.AppBarContextMenuDismissed:
+			// log.Printf("Context Menu Dismissed: %v", n)
+		case component.AppBarOverflowActionClicked:
+			// log.Printf("Overflow Action Clicked: %v", n)
+		}
+	}
+}
 
-var MenuIcon *widget.Icon = func() *widget.Icon {
-	icon, _ := widget.NewIcon(icons.NavigationMenu)
-	return icon
-}()
+// Navi Menu Option to Dice Roller Content List
+type listID int
+
+const (
+	basicConst listID = iota
+	storytellerConst
+)
+
+func GetList(id listID) []layout.Widget {
+	switch id {
+	case basicConst:
+		// log.Printf("the list is: %v", basicList)
+		return basicList
+	case storytellerConst:
+		// log.Printf("the list is: %v", storytellerList)
+		return storytellerList
+	default:
+		return nil
+	}
+}
+
+// Dice Roller Content List
+var ContentList []layout.Widget = basicList
+
+func content(gtx C, th *material.Theme, contentList []layout.Widget) D {
+	materialList := material.List(th, &window_list)
+
+	return materialList.Layout(gtx, len(contentList), func(gtx C, i int) D {
+		return contentList[i](gtx)
+	})
+}
 
 func Gui(w *app.Window) error {
 
 	var ops op.Ops
 
+	// appBar
+	var MenuIcon *widget.Icon = func() *widget.Icon {
+		icon, _ := widget.NewIcon(icons.NavigationMenu)
+		return icon
+	}()
 	appBar.NavigationIcon = MenuIcon
 	appBar.Title = "go-roll"
 	appBar.ContextualTitle = "Contextual Menu"
 	appBar.Anchor = component.Top
 
+	// Nav Menu Options
 	modalSideDraw.AddNavItem(
 		component.NavItem{
 			Tag:  0,
@@ -158,20 +202,17 @@ func Gui(w *app.Window) error {
 
 			if modalSideDraw.NavDestinationChanged() {
 				currentNav := modalSideDraw.CurrentNavDestination()
-				tag, ok := currentNav.(int)
-				if !ok {
-					log.Printf("Current Nav is not a int: %v", ok)
+				tag, err := currentNav.(int)
+				if !err {
+					log.Printf("Current Nav is not a int: %v", err)
 				}
-				log.Printf("tag is: %v", tag)
 
-				var id ListID = ListID(tag)
-
+				var id listID = listID(tag)
 				ContentList = GetList(id)
-				log.Printf("widget is: %v", ContentList)
-				log.Printf("Navi Draw selected: %v", currentNav)
 			}
 
 			bar := layout.Rigid(func(gtx C) D {
+				// TODO figure out "string A" and "string B" acessibility nav option
 				return appBar.Layout(gtx, th, "string A", "string B")
 			})
 
@@ -179,11 +220,10 @@ func Gui(w *app.Window) error {
 				return content(gtx, th, ContentList)
 			})
 
-			flex := layout.Flex{
+			layout.Flex{
 				Axis:      layout.Vertical,
 				Alignment: layout.Middle,
-			}
-			flex.Layout(gtx, bar, menu)
+			}.Layout(gtx, bar, menu)
 
 			modal.Layout(gtx, th)
 
@@ -191,48 +231,3 @@ func Gui(w *app.Window) error {
 		}
 	}
 }
-
-func appBarEvents(gtx layout.Context) {
-	for _, navi_event := range appBar.Events(gtx) {
-		switch n := navi_event.(type) {
-		case component.AppBarNavigationClicked:
-			modalSideDraw.Appear(gtx.Now)
-			// sideAnim.Disappear(gtx.Now)
-			log.Printf("button pushed: %v", n)
-		case component.AppBarContextMenuDismissed:
-			log.Printf("Context Menu Dismissed: %v", n)
-		case component.AppBarOverflowActionClicked:
-			log.Printf("Overflow Action Clicked: %v", n)
-		}
-	}
-}
-
-func content(gtx C, th *material.Theme, contentList []layout.Widget) D {
-	materialList := material.List(th, &window_list)
-
-	return materialList.Layout(gtx, len(contentList), func(gtx C, i int) D {
-		return contentList[i](gtx)
-	})
-}
-
-type ListID int
-
-const (
-	BasicList ListID = iota
-	StorytellerList
-)
-
-func GetList(id ListID) []layout.Widget {
-	switch id {
-	case BasicList:
-		log.Printf("the list is: %v", basicList)
-		return basicList
-	case StorytellerList:
-		log.Printf("the list is: %v", storytellerList)
-		return storytellerList
-	default:
-		return nil
-	}
-}
-
-var ContentList []layout.Widget = basicList
