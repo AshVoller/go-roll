@@ -31,7 +31,10 @@ go.work.sum
 # .idea/
 # .vscode/
 
+# Project
+/bin/*.*
 /old
+/planning
 *,patch
 *.diff
 
