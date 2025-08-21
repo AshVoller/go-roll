@@ -19,14 +19,35 @@ import (
 // App Bar and Nav Menu
 var modal = component.NewModal()
 var appBar = component.NewAppBar(modal)
-var modalSideDraw = component.NewModalNav(modal, "Dice Systems", "Choose which system to use.")
+var modalNavDraw = component.NewModalNav(modal, "Dice Systems", "Choose which system to use.")
+
+// Nav Menu Options
+func addNav(nav *component.ModalNavDrawer) {
+	// Adding basicList
+	nav.AddNavItem(
+		component.NavItem{
+			Tag:  0,
+			Name: "Basic Dice",
+			// Icon: MenuIcon,
+		},
+	)
+
+	// Adding storytellerList
+	nav.AddNavItem(
+		component.NavItem{
+			Tag:  1,
+			Name: "Exalted",
+			// Icon: MenuIcon,
+		},
+	)
+}
 
 // App Bar Event Handler
 func appBarEvents(gtx layout.Context) {
 	for _, navi_event := range appBar.Events(gtx) {
 		switch navi_event.(type) {
 		case component.AppBarNavigationClicked:
-			modalSideDraw.Appear(gtx.Now)
+			modalNavDraw.Appear(gtx.Now)
 			// log.Printf("button pushed: %v", n)
 		case component.AppBarContextMenuDismissed:
 			// log.Printf("Context Menu Dismissed: %v", n)
@@ -44,7 +65,7 @@ const (
 	storytellerConst
 )
 
-func GetList(id listID) []layout.Widget {
+func getList(id listID) []layout.Widget {
 	switch id {
 	case basicConst:
 		// log.Printf("the list is: %v", basicList)
@@ -83,22 +104,7 @@ func Gui(w *app.Window) error {
 	appBar.ContextualTitle = "Contextual Menu"
 	appBar.Anchor = component.Top
 
-	// Nav Menu Options
-	modalSideDraw.AddNavItem(
-		component.NavItem{
-			Tag:  0,
-			Name: "Basic Dice",
-			// Icon: MenuIcon,
-		},
-	)
-
-	modalSideDraw.AddNavItem(
-		component.NavItem{
-			Tag:  1,
-			Name: "Exalted",
-			// Icon: MenuIcon,
-		},
-	)
+	addNav(modalNavDraw)
 
 	for {
 		switch e := w.Event().(type) {
@@ -109,15 +115,15 @@ func Gui(w *app.Window) error {
 
 			appBarEvents(gtx)
 
-			if modalSideDraw.NavDestinationChanged() {
-				currentNav := modalSideDraw.CurrentNavDestination()
+			if modalNavDraw.NavDestinationChanged() {
+				currentNav := modalNavDraw.CurrentNavDestination()
 				tag, err := currentNav.(int)
 				if !err {
 					log.Printf("Current Nav is not a int: %v", err)
 				}
 
 				var id listID = listID(tag)
-				ContentList = GetList(id)
+				ContentList = getList(id)
 			}
 
 			bar := layout.Rigid(func(gtx C) D {

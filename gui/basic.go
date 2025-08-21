@@ -14,7 +14,6 @@ var basicList = []layout.Widget{
 		return layout.Flex{
 			Axis:      layout.Vertical,
 			Alignment: layout.Middle,
-			//Spacing:   layout.SpaceStart, // come back to later
 		}.Layout(gtx,
 			layout.Rigid(layout.Spacer{Height: unit.Dp(50)}.Layout),
 
@@ -40,7 +39,6 @@ var basicList = []layout.Widget{
 					return text_margins.Layout(gtx, func(gtx C) D {
 						return layout.Flex{
 							Axis: layout.Horizontal,
-							// Alignment: layout.Middle,
 						}.Layout(gtx,
 							layout.Rigid(func(gtx C) D {
 								gtx.Constraints.Min.X = gtx.Dp(100)
