@@ -93,10 +93,12 @@ func Roller(args *RollArgs) {
 }
 
 func StorytellerSystem(args *RollArgs) {
-	diceStr := args.TypeDiceEd.Text()
-	if diceStr == "" {
-		diceStr = "10"
-	}
+	// TODO improve fix for pointers carrying over between rollers
+	// diceStr := args.TypeDiceEd.Text()
+	// if diceStr == "" {
+	// 	diceStr = "10"
+	// }
+	diceStr := "10"
 	diceInt, _ := strconv.Atoi(diceStr)
 
 	numStr := args.NumDiceEd.Text()
