@@ -61,7 +61,7 @@ func Roller(args *RollArgs) {
 	}
 	bonus, _ := strconv.Atoi(bonusStr)
 
-	roll_string := "---< Rolled " + numStr + "d" + diceStr + " + " + bonusStr + " >---\n"
+	roll_string := fmt.Sprintf("---< Rolled %sd%s + %s >---\n", numStr, diceStr, bonusStr)
 	args.OutputEd.SetText(roll_string)
 	args.HistoryEd.Insert(roll_string)
 
@@ -83,26 +83,10 @@ func Roller(args *RollArgs) {
 	args.OutputEd.Insert(resultsStr)
 	args.HistoryEd.Insert(resultsStr)
 
-	// var diceTotalInt int
-	// //outputEd.SetCaret(outputEd.Len(), outputEd.Len())
-	// for count := 1; count <= num; count++ {
-	// 	countStr := strconv.Itoa(count)
-
-	// 	resultInt := rand.Intn(dice) + 1
-	// 	resultStr := strconv.Itoa(resultInt)
-
-	// 	diceTotalInt = diceTotalInt + resultInt
-
-	// 	args.OutputEd.SetCaret(args.OutputEd.Len(), args.OutputEd.Len())
-	// 	insert_string := "Die " + countStr + ": " + resultStr + "\n"
-	// 	args.OutputEd.Insert(insert_string)
-	// 	args.HistoryEd.Insert(insert_string)
-	// }
-
 	diceTotalStr := strconv.Itoa(diceTotalInt)
 	rollTotalStr := strconv.Itoa(diceTotalInt + bonus)
 
-	total_string := "---< Total of the Dice " + diceTotalStr + " + Bonus/Penalty " + bonusStr + " = Grand Total " + rollTotalStr + " >---\n"
+	total_string := fmt.Sprintf("---< Total of the Dice %s + Bonus/Penalty %s = Grand Total %s >---\n", diceTotalStr, bonusStr, rollTotalStr)
 	args.OutputEd.Insert(total_string)
 	args.HistoryEd.Insert(total_string)
 
@@ -164,8 +148,8 @@ func StorytellerSystem(args *RollArgs) {
 		doubleStr = strings.Join(sliceStr, ",")
 	}
 
-	roll_string := "---< Rolled " + numStr + "d" + diceStr + " at Diffculty " + targetNumStr + " >---\n"
-	details_string := "---< Details: Target Number " + targetNumStr + ", Reroll " + rerollStr + " and Doubles " + doubleStr + " >---\n"
+	roll_string := fmt.Sprintf("---< Rolled %sd%s at Diffculty %s >---\n", numStr, diceStr, targetNumStr)
+	details_string := fmt.Sprintf("---< Details: Target Number %s, Reroll %s and Doubles %s >---\n", targetNumStr, rerollStr, doubleStr)
 	args.OutputEd.SetText(roll_string)
 	args.HistoryEd.Insert(roll_string)
 	args.HistoryEd.Insert(details_string)
@@ -180,14 +164,14 @@ func StorytellerSystem(args *RollArgs) {
 	// think about switch case statment instead of if statements
 	if suxTotalInt-diff >= 1 {
 		thresholdStr := strconv.Itoa(suxTotalInt - diff)
-		total_string = "---< " + suxTotalStr + " Success with " + thresholdStr + " Threshold Successes >---\n"
+		total_string = fmt.Sprintf("---< %s Success with %s Threshold Successes >---\n", suxTotalStr, thresholdStr)
 	}
 	if suxTotalInt-diff == 0 {
-		total_string = "---< " + suxTotalStr + " Success >---\n"
+		total_string = fmt.Sprintf("---< %s Success >---\n", suxTotalStr)
 	}
 	if suxTotalInt-diff < 0 {
 		failStr := strconv.Itoa((suxTotalInt - diff) * -1)
-		total_string = "---< " + suxTotalStr + " Success, Failed by " + failStr + " Successes >---\n"
+		total_string = fmt.Sprintf("---< %s Success, Failed by %s Successes >---\n", suxTotalStr, failStr)
 	}
 
 	args.OutputEd.Insert(total_string)
