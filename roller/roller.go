@@ -65,21 +65,39 @@ func Roller(args *RollArgs) {
 	args.OutputEd.SetText(roll_string)
 	args.HistoryEd.Insert(roll_string)
 
-	var diceTotalInt int
-	//outputEd.SetCaret(outputEd.Len(), outputEd.Len())
-	for count := 1; count <= num; count++ {
-		countStr := strconv.Itoa(count)
-
-		resultInt := rand.Intn(dice) + 1
-		resultStr := strconv.Itoa(resultInt)
-
-		diceTotalInt = diceTotalInt + resultInt
-
-		args.OutputEd.SetCaret(args.OutputEd.Len(), args.OutputEd.Len())
-		insert_string := "Die " + countStr + ": " + resultStr + "\n"
-		args.OutputEd.Insert(insert_string)
-		args.HistoryEd.Insert(insert_string)
+	results, err := rollArray(dice, num)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
 	}
+
+	var diceTotalInt int
+	var sliceStr []string
+	for _, n := range results {
+		diceTotalInt = diceTotalInt + n
+		sliceStr = append(sliceStr, strconv.Itoa(n))
+	}
+
+	args.OutputEd.SetCaret(args.OutputEd.Len(), args.OutputEd.Len())
+	resultsStr := strings.Join(sliceStr, ",") + "\n"
+	args.OutputEd.Insert(resultsStr)
+	args.HistoryEd.Insert(resultsStr)
+
+	// var diceTotalInt int
+	// //outputEd.SetCaret(outputEd.Len(), outputEd.Len())
+	// for count := 1; count <= num; count++ {
+	// 	countStr := strconv.Itoa(count)
+
+	// 	resultInt := rand.Intn(dice) + 1
+	// 	resultStr := strconv.Itoa(resultInt)
+
+	// 	diceTotalInt = diceTotalInt + resultInt
+
+	// 	args.OutputEd.SetCaret(args.OutputEd.Len(), args.OutputEd.Len())
+	// 	insert_string := "Die " + countStr + ": " + resultStr + "\n"
+	// 	args.OutputEd.Insert(insert_string)
+	// 	args.HistoryEd.Insert(insert_string)
+	// }
 
 	diceTotalStr := strconv.Itoa(diceTotalInt)
 	rollTotalStr := strconv.Itoa(diceTotalInt + bonus)
