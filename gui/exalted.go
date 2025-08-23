@@ -213,7 +213,7 @@ var storytellerList = []layout.Widget{
 							DoubleS:        doubleS,
 							RollTillGoneS:  rerollS,
 						}
-						roller.StorytellerSystem(&args)
+						roller.ExaltedRoller(&args)
 					}
 					btn := material.Button(th, &rollButton, "Roll")
 					return btn.Layout(gtx)

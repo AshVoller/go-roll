@@ -98,7 +98,7 @@ var basicList = []layout.Widget{
 							OutputEd:   &Output_editor,
 							HistoryEd:  &History_editor,
 						}
-						roller.Roller(&args)
+						roller.BasicRoller(&args)
 					}
 					btn := material.Button(th, &rollButton, "Roll")
 					return btn.Layout(gtx)
