@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// TODO Handle errors from Atoi lines
 // func BasicRoller(numDiceEd, typeDiceEd, bonusEd, outputEd, historyEd *widget.Editor)
 func BasicRoller(args *RollArgs) {
 	numStr := args.NumDiceEd.Text()
@@ -20,13 +21,19 @@ func BasicRoller(args *RollArgs) {
 	}
 	dice, _ := strconv.Atoi(diceStr)
 
-	bonusStr := args.BonusEd.Text()
-	if bonusStr == "" {
-		bonusStr = "0"
+	addDieStr := args.AddDieEd.Text()
+	if addDieStr == "" {
+		addDieStr = "0"
 	}
-	bonus, _ := strconv.Atoi(bonusStr)
+	bonusDie, _ := strconv.Atoi(addDieStr)
 
-	roll_string := fmt.Sprintf("---< Rolled %sd%s + %s >---\n", numStr, diceStr, bonusStr)
+	addTotalStr := args.AddTotalEd.Text()
+	if addTotalStr == "" {
+		addTotalStr = "0"
+	}
+	bonusTotal, _ := strconv.Atoi(addTotalStr)
+
+	roll_string := fmt.Sprintf("---< Rolled %sd%s + %s >---\n", numStr, diceStr, addTotalStr)
 	args.OutputEd.SetText(roll_string)
 	args.HistoryEd.Insert(roll_string)
 
@@ -39,8 +46,15 @@ func BasicRoller(args *RollArgs) {
 	var diceTotalInt int
 	var sliceStr []string
 	for _, n := range results {
-		diceTotalInt = diceTotalInt + n
-		sliceStr = append(sliceStr, strconv.Itoa(n))
+		nDie := n + bonusDie
+		diceTotalInt = diceTotalInt + nDie
+		var str string
+		if addDieStr == "0" || addDieStr == "" {
+			str = fmt.Sprintf("%d", n)
+		} else {
+			str = fmt.Sprintf("%d", nDie)
+		}
+		sliceStr = append(sliceStr, str)
 	}
 
 	args.OutputEd.SetCaret(args.OutputEd.Len(), args.OutputEd.Len())
@@ -49,9 +63,9 @@ func BasicRoller(args *RollArgs) {
 	args.HistoryEd.Insert(resultsStr)
 
 	diceTotalStr := strconv.Itoa(diceTotalInt)
-	rollTotalStr := strconv.Itoa(diceTotalInt + bonus)
+	rollTotalStr := strconv.Itoa(diceTotalInt + bonusTotal)
 
-	total_string := fmt.Sprintf("---< Total of the Dice %s + Bonus/Penalty %s = Grand Total %s >---\n", diceTotalStr, bonusStr, rollTotalStr)
+	total_string := fmt.Sprintf("---< Total of the Dice %s + Bonus/Penalty %s = Grand Total %s >---\n", diceTotalStr, addTotalStr, rollTotalStr)
 	args.OutputEd.Insert(total_string)
 	args.HistoryEd.Insert(total_string)
 

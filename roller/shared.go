@@ -12,7 +12,8 @@ type RollArgs struct {
 	TypeDiceEd     *widget.Editor
 	DiffEd         *widget.Editor
 	TargetNumberEd *widget.Editor
-	BonusEd        *widget.Editor
+	AddTotalEd     *widget.Editor
+	AddDieEd       *widget.Editor
 	OutputEd       *widget.Editor
 	HistoryEd      *widget.Editor
 	DoubleS        [4]int

@@ -33,59 +33,9 @@ var basicList = []layout.Widget{
 				})
 			}),
 
-			// Rigid Box of the Horizontal Text Inputs
-			layout.Rigid(func(gtx C) D {
-				return layout.Center.Layout(gtx, func(gtx C) D {
-					return text_margins.Layout(gtx, func(gtx C) D {
-						return layout.Flex{
-							Axis: layout.Horizontal,
-						}.Layout(gtx,
-							layout.Rigid(func(gtx C) D {
-								gtx.Constraints.Min.X = gtx.Dp(100)
-								gtx.Constraints.Max.X = gtx.Dp(300)
-								return material.Body2(th, "Number of Dice").Layout(gtx)
-							}),
-							layout.Rigid(layout.Spacer{Width: 5}.Layout),
-							layout.Rigid(func(gtx C) D {
-								ed := material.Editor(th, &numDiceInput, "1")
-								gtx.Constraints.Min.X = gtx.Dp(50)
-								gtx.Constraints.Max.X = gtx.Dp(50)
-								return text_border.Layout(gtx, ed.Layout)
-							}),
+			basic_content(gtx),
 
-							layout.Rigid(layout.Spacer{Width: 20}.Layout),
-
-							layout.Rigid(func(gtx C) D {
-								gtx.Constraints.Min.X = gtx.Dp(100)
-								gtx.Constraints.Max.X = gtx.Dp(300)
-								return material.Body2(th, "Number Faces on Dice").Layout(gtx)
-							}),
-							layout.Rigid(layout.Spacer{Width: 5}.Layout),
-							layout.Rigid(func(gtx C) D {
-								ed := material.Editor(th, &typeDiceInput, "20")
-								gtx.Constraints.Min.X = gtx.Dp(50)
-								gtx.Constraints.Max.X = gtx.Dp(50)
-								return text_border.Layout(gtx, ed.Layout)
-							}),
-
-							layout.Rigid(layout.Spacer{Width: 20}.Layout),
-
-							layout.Rigid(func(gtx C) D {
-								gtx.Constraints.Min.X = gtx.Dp(100)
-								gtx.Constraints.Max.X = gtx.Dp(300)
-								return material.Body2(th, "+/- to dice roll").Layout(gtx)
-							}),
-							layout.Rigid(layout.Spacer{Width: 5}.Layout),
-							layout.Rigid(func(gtx C) D {
-								ed := material.Editor(th, &addRollInput, "0")
-								gtx.Constraints.Min.X = gtx.Dp(50)
-								gtx.Constraints.Max.X = gtx.Dp(50)
-								return text_border.Layout(gtx, ed.Layout)
-							}),
-						)
-					})
-				})
-			}),
+			layout.Rigid(layout.Spacer{Height: 50}.Layout),
 
 			// Roll Button
 			layout.Rigid(func(gtx C) D {
@@ -94,7 +44,8 @@ var basicList = []layout.Widget{
 						args := roller.RollArgs{
 							NumDiceEd:  &numDiceInput,
 							TypeDiceEd: &typeDiceInput,
-							BonusEd:    &addRollInput,
+							AddTotalEd: &addToRollInput,
+							AddDieEd:   &addToDieInput,
 							OutputEd:   &Output_editor,
 							HistoryEd:  &History_editor,
 						}
@@ -124,4 +75,122 @@ var basicList = []layout.Widget{
 			}),
 		)
 	},
+}
+
+func basic_content(gtx C) layout.FlexChild {
+	// Rigid Box of the Horizontal Text Inputs
+	return layout.Rigid(func(gtx C) D {
+		return layout.Center.Layout(gtx, func(gtx C) D {
+			// return text_margins.Layout(gtx, func(gtx C) D {
+			// Container for the Columns
+			return layout.Flex{
+				Axis: layout.Horizontal,
+			}.Layout(gtx,
+
+				// Column 1
+				layout.Rigid(func(gtx C) D {
+					return layout.Center.Layout(gtx, func(gtx C) D {
+						return layout.Flex{
+							Axis: layout.Vertical,
+						}.Layout(gtx,
+							layout.Rigid(func(gtx C) D {
+								gtx.Constraints.Min.X = gtx.Dp(100)
+								gtx.Constraints.Max.X = gtx.Dp(300)
+								return material.Body2(th, "+/- to each dice").Layout(gtx)
+							}),
+
+							layout.Rigid(layout.Spacer{Height: unit.Dp(5)}.Layout),
+
+							layout.Rigid(func(gtx C) D {
+								gtx.Constraints.Min.X = gtx.Dp(100)
+								gtx.Constraints.Max.X = gtx.Dp(300)
+								return material.Body2(th, "Number of Dice").Layout(gtx)
+							}),
+						)
+					})
+				}),
+
+				layout.Rigid(layout.Spacer{Width: 5}.Layout),
+
+				// Column 2
+				layout.Rigid(func(gtx C) D {
+					return layout.Center.Layout(gtx, func(gtx C) D {
+						return layout.Flex{
+							Axis: layout.Vertical,
+						}.Layout(gtx,
+							layout.Rigid(func(gtx C) D {
+								ed := material.Editor(th, &addToDieInput, "0")
+								gtx.Constraints.Min.X = gtx.Dp(50)
+								gtx.Constraints.Max.X = gtx.Dp(50)
+								return text_border.Layout(gtx, ed.Layout)
+							}),
+
+							layout.Rigid(layout.Spacer{Height: unit.Dp(5)}.Layout),
+
+							layout.Rigid(func(gtx C) D {
+								ed := material.Editor(th, &numDiceInput, "1")
+								gtx.Constraints.Min.X = gtx.Dp(50)
+								gtx.Constraints.Max.X = gtx.Dp(50)
+								return text_border.Layout(gtx, ed.Layout)
+							}),
+						)
+					})
+				}),
+
+				layout.Rigid(layout.Spacer{Width: 100}.Layout),
+
+				// Column 3
+				layout.Rigid(func(gtx C) D {
+					return layout.Center.Layout(gtx, func(gtx C) D {
+						return layout.Flex{
+							Axis: layout.Vertical,
+						}.Layout(gtx,
+
+							layout.Rigid(func(gtx C) D {
+								gtx.Constraints.Min.X = gtx.Dp(100)
+								gtx.Constraints.Max.X = gtx.Dp(300)
+								return material.Body2(th, "+/- to total of the roll").Layout(gtx)
+							}),
+
+							layout.Rigid(layout.Spacer{Height: unit.Dp(5)}.Layout),
+
+							layout.Rigid(func(gtx C) D {
+								gtx.Constraints.Min.X = gtx.Dp(100)
+								gtx.Constraints.Max.X = gtx.Dp(300)
+								return material.Body2(th, "Number Faces on Dice").Layout(gtx)
+							}),
+						)
+					})
+				}),
+
+				layout.Rigid(layout.Spacer{Width: 5}.Layout),
+
+				// Column 4
+				layout.Rigid(func(gtx C) D {
+					return layout.Center.Layout(gtx, func(gtx C) D {
+						return layout.Flex{
+							Axis: layout.Vertical,
+						}.Layout(gtx,
+							layout.Rigid(func(gtx C) D {
+								ed := material.Editor(th, &addToRollInput, "0")
+								gtx.Constraints.Min.X = gtx.Dp(50)
+								gtx.Constraints.Max.X = gtx.Dp(50)
+								return text_border.Layout(gtx, ed.Layout)
+							}),
+
+							layout.Rigid(layout.Spacer{Height: unit.Dp(5)}.Layout),
+
+							layout.Rigid(func(gtx C) D {
+								ed := material.Editor(th, &typeDiceInput, "20")
+								gtx.Constraints.Min.X = gtx.Dp(50)
+								gtx.Constraints.Max.X = gtx.Dp(50)
+								return text_border.Layout(gtx, ed.Layout)
+							}),
+						)
+					})
+				}),
+			)
+			// })
+		})
+	})
 }

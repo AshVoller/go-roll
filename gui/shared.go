@@ -80,8 +80,14 @@ var typeDiceInput = widget.Editor{
 	Alignment:  text.Middle,
 }
 
-// +/- to Dice Roll
-var addRollInput = widget.Editor{
+// +/- to Each Dice Rolled
+var addToDieInput = widget.Editor{
+	SingleLine: true,
+	Alignment:  text.Middle,
+}
+
+// +/- to Dice Total Rolled
+var addToRollInput = widget.Editor{
 	SingleLine: true,
 	Alignment:  text.Middle,
 }
